@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QEMY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/game.css">
+</head>
+<body>
+
+  <!-- Lobby waiting screen -->
+  <div id="lobbyScreen" class="screen">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="lobby-center">
+      <div class="logo">QEMY</div>
+      <div class="room-tag" id="roomTag">ROOM ——</div>
+      <div class="waiting-players" id="waitingPlayers"></div>
+      <div class="waiting-msg" id="waitingMsg">Waiting for players...</div>
+      <button class="start-early-btn" id="startEarlyBtn" onclick="requestEarlyStart()" style="display:none">
+        Start Now (2+ players)
+      </button>
+      <div class="share-link-box">
+        <span class="share-label">Share link</span>
+        <span class="share-url" id="shareUrl"></span>
+        <button class="copy-btn" onclick="copyLink()">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main game screen -->
+  <div id="gameScreen" class="screen hidden">
+
+    <!-- Top opponent(s) -->
+    <div id="topZone" class="player-zone top-zone"></div>
+
+    <!-- Side players (3-4 player mode) -->
+    <div id="leftZone" class="player-zone left-zone hidden"></div>
+    <div id="rightZone" class="player-zone right-zone hidden"></div>
+
+    <!-- Center board -->
+    <div id="centerBoard" class="center-board">
+      <div id="deckPile" class="deck-pile" onclick="onDrawCard()">
+        <div class="deck-back">
+          <span class="deck-label">QEMY</span>
+        </div>
+        <div class="deck-count" id="deckCount"></div>
+      </div>
+
+      <div id="boardCard" class="board-card">
+        <div class="card-inner" id="boardCardInner"></div>
+      </div>
+
+      <!-- Color indicator after wild -->
+      <div id="activeColorDot" class="active-color-dot hidden"></div>
+    </div>
+
+    <!-- Reaction button -->
+    <div id="reactionBtn" class="reaction-btn hidden" onclick="fireReaction()">
+      <span class="flask-icon">⚗️</span>
+      <span>Chemical Reaction</span>
+    </div>
+
+    <!-- Bottom — local player -->
+    <div id="bottomZone" class="player-zone bottom-zone">
+      <div class="player-label-local" id="myLabel"></div>
+      <div class="hand-container" id="myHand"></div>
+    </div>
+
+    <!-- Turn indicator -->
+    <div id="turnBanner" class="turn-banner"></div>
+
+    <!-- Notification toasts -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Color chooser overlay -->
+    <div id="colorChooser" class="color-chooser hidden">
+      <div class="chooser-title">Choose a color</div>
+      <div class="chooser-options">
+        <button class="color-option red" onclick="pickColor('red')">Red</button>
+        <button class="color-option yellow" onclick="pickColor('yellow')">Yellow</button>
+        <button class="color-option green" onclick="pickColor('green')">Green</button>
+        <button class="color-option blue" onclick="pickColor('blue')">Blue</button>
+      </div>
+    </div>
+
+    <!-- Game over overlay -->
+    <div id="gameOverlay" class="game-overlay hidden">
+      <div class="game-over-card">
+        <div class="go-emoji" id="goEmoji">🏆</div>
+        <div class="go-title" id="goTitle">Winner!</div>
+        <div class="go-name" id="goName"></div>
+        <button class="go-btn" onclick="window.location.href='/'">Back to Lobby</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/game.js"></script>
+</body>
+</html>
