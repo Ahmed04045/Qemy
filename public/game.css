@@ -16,6 +16,14 @@
   --card-radius: 10px;
 }
 
+@media (max-width: 600px) {
+  :root {
+    --card-w: 52px;
+    --card-h: 78px;
+    --card-radius: 7px;
+  }
+}
+
 html, body {
   width: 100%; height: 100%;
   background: var(--midnight);
@@ -176,7 +184,7 @@ html, body {
 
 /* Front of card */
 .card-front {
-  width: 100%; height: 100%;
+  height: 100%;
   border-radius: var(--card-radius);
   border: 2px solid rgba(255,255,255,0.15);
   display: flex; flex-direction: column;
@@ -219,11 +227,13 @@ html, body {
   box-shadow: 0 20px 40px rgba(0,0,0,0.6);
   z-index: 100;
 }
-#myHand .card {
-  margin-left: -20px;
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s, margin 0.2s;
+@media (hover: none) {
+  #myHand .card:active {
+    transform: translateY(-14px) scale(1.04);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.6);
+    z-index: 100;
+  }
 }
-#myHand .card:first-child { margin-left: 0; }
 
 /* Playable highlight */
 .card.playable {
@@ -354,10 +364,30 @@ html, body {
 .hand-container {
   display: flex; align-items: flex-end;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 8px;
+  width: 100%;
   max-width: 100vw;
-  overflow: visible;
-  min-height: calc(var(--card-h) + 20px);
+  overflow-x: auto;
+  overflow-y: visible;
+  min-height: calc(var(--card-h) + 24px);
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+.hand-container::-webkit-scrollbar { display: none; }
+
+/* Dynamic overlap: fewer cards = more spread, more cards = tighter */
+#myHand .card {
+  margin-left: -24px;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  flex-shrink: 0;
+}
+#myHand .card:first-child { margin-left: 0; }
+
+/* On mobile, tighter overlap */
+@media (max-width: 600px) {
+  #myHand .card { margin-left: -30px; }
+  #myHand .card:first-child { margin-left: 0; }
 }
 
 /* ── Toast ── */
@@ -516,4 +546,85 @@ html, body {
   font-size: 10px; font-weight: 700;
   letter-spacing: 2px; margin-top: 4px;
   animation: pulse 0.8s ease infinite;
+}
+
+/* ── Player avatars ── */
+.player-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.my-avatar {
+  width: 44px; height: 44px;
+  font-size: 22px;
+  background: rgba(244,162,97,0.1);
+  border-color: rgba(244,162,97,0.3);
+}
+
+.player-label-local {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.my-name-tag {
+  font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+}
+
+/* ── Mobile game board layout ── */
+@media (max-width: 600px) {
+  #gameScreen {
+    padding: 6px;
+    gap: 0;
+  }
+
+  .center-board { gap: 16px; }
+
+  .turn-banner {
+    font-size: 10px; padding: 6px 14px;
+    top: 8px;
+  }
+
+  .reaction-btn {
+    right: 8px; padding: 10px 10px;
+    font-size: 9px;
+  }
+  .flask-icon { font-size: 18px; }
+
+  .opp-card { width: 24px; height: 36px; margin-left: -10px; }
+  .opp-card:first-child { margin-left: 0; }
+
+  .player-avatar { width: 30px; height: 30px; font-size: 14px; }
+  .my-avatar { width: 34px; height: 34px; font-size: 16px; }
+
+  .card-number { font-size: 22px; }
+
+  .chooser-options { gap: 8px; }
+  .color-option { width: 90px; height: 64px; font-size: 12px; }
+
+  .toast-container { bottom: 150px; }
+  .toast { font-size: 11px; padding: 6px 14px; }
+}
+
+/* ── Prevent pinch zoom on mobile ── */
+@media (max-width: 600px) {
+  html { touch-action: manipulation; }
+}
+/*phone cut issue*/
+@media (max-width: 600px) {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #gameScreen {
+    height: 100dvh; /* 👈 KEY FIX (dynamic viewport) */
+  }
+
+  .bottom-zone {
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+  }
 }
