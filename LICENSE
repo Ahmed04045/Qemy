@@ -1,0 +1,22 @@
+Proprietary Software License
+Copyright © 2026 Mohammed Ahmed & Yaman Kharda. All rights reserved.
+
+1. Ownership and Restrictions
+This software and all associated files (the "Software") are the proprietary property of Mohammed Ahmed and Yaman Kharda.
+
+No part of this Software may be used, copied, modified, merged, published, distributed, sublicensed, or sold for any purpose—commercial or non-commercial—without the express prior written permission of the copyright holders. If you wish to use this code in your own project or business, you must contact the copyright holders to negotiate a separate licensing agreement.
+
+2. GitHub Public Repository Exception
+By viewing this Software in a public GitHub repository, you are granted a limited, non-exclusive license to:
+
+    * View the source code for educational and review purposes.
+    * Fork the repository within the GitHub platform for personal, non-commercial use, provided that no further distribution or usage occurs outside of the GitHub environment.
+
+3. Attribution of MIT-Licensed Components
+This Software is a heavily modified derivative work that incorporates code originally authored by Izan Pérez Cosano, used under the terms of the MIT License.
+
+    * The original copyright notice and MIT permission notice for those components are preserved in the CREDITS file of this repository.
+    * The proprietary restrictions in Section 1 of this license apply to all modifications, new features, and the unique combination of elements created by Mohammed Ahmed and Yaman Kharda.
+
+4. No Warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
