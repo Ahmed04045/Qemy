@@ -8,6 +8,8 @@ let myHand = [];
 let players = [];       // { name, id, handSize }
 let myTurn = false;
 let activeColor = null;
+let currentBoardCard = null;
+let currentBoardType = null;
 let pendingWildCard = null; // card waiting for color choice
 let hasReactionBtn = false;
 
@@ -141,7 +143,7 @@ function setupLayout(pl) {
     rightZone.appendChild(makeOppZone(opponents.right.name, opponents.right.index, 'vertical'));
   }
 
-  myLabelEl.textContent = playerName;
+  renderMyProfile();
 }
 
 function getOpponentLayout(pl, count) {
@@ -161,9 +163,14 @@ function getOpponentLayout(pl, count) {
 function makeOppZone(name, playerIdx, direction) {
   const wrap = document.createElement('div');
   wrap.style.display = 'flex';
-  wrap.style.flexDirection = direction === 'vertical' ? 'column' : 'column';
+  wrap.style.flexDirection = 'column';
   wrap.style.alignItems = 'center';
-  wrap.style.gap = '6px';
+  wrap.style.gap = '4px';
+
+  // Avatar
+  const avatar = document.createElement('div');
+  avatar.className = 'player-avatar';
+  avatar.textContent = randomEmoji(playerIdx);
 
   const label = document.createElement('div');
   label.className = 'opp-label';
@@ -173,6 +180,7 @@ function makeOppZone(name, playerIdx, direction) {
   const handEl = document.createElement('div');
   handEl.className = 'opp-hand';
   handEl.id = `opp-hand-${playerIdx}`;
+  handEl.dataset.count = '8';
   if (direction === 'vertical') {
     handEl.style.flexDirection = 'column';
   }
@@ -182,10 +190,29 @@ function makeOppZone(name, playerIdx, direction) {
   badge.id = `opp-count-${playerIdx}`;
   badge.textContent = '8 cards';
 
+  wrap.appendChild(avatar);
   wrap.appendChild(label);
   wrap.appendChild(handEl);
   wrap.appendChild(badge);
   return wrap;
+}
+
+const EMOJIS = ['🧪','🔬','⚗️','🧬','🌡️','💊','🔭','🧲','⚡','🌊'];
+function randomEmoji(seed) {
+  return EMOJIS[seed % EMOJIS.length];
+}
+
+// My own avatar in bottom zone
+function renderMyProfile() {
+  myLabelEl.innerHTML = '';
+  const avatar = document.createElement('div');
+  avatar.className = 'player-avatar my-avatar';
+  avatar.textContent = EMOJIS[(myIndex + 5) % EMOJIS.length];
+  const nameSpan = document.createElement('div');
+  nameSpan.className = 'my-name-tag';
+  nameSpan.textContent = playerName;
+  myLabelEl.appendChild(avatar);
+  myLabelEl.appendChild(nameSpan);
 }
 
 // ── Receive own hand ──────────────────────────────────────────────────────────
@@ -218,11 +245,16 @@ function renderMyHand(hand, isNew) {
 }
 
 function isPlayable(cardNum) {
-  const type = cardType(cardNum);
   const color = cardColor(cardNum);
+  const type = cardType(cardNum);
   if (color === 'black') return true;
   if (color === activeColor) return true;
-  // number match against board uses activeColor
+  // Number match: same face value as board card
+  const boardNum = currentBoardCard % 14;
+  const myNum = cardNum % 14;
+  if (myNum === boardNum && myNum <= 9) return true;
+  // Special type match (Skip vs Skip, Reverse vs Reverse, Draw2 vs Draw2)
+  if (type !== 'Number' && type === currentBoardType) return true;
   return false;
 }
 
@@ -291,6 +323,8 @@ socket.on('forceDraw', ({ playerName: pn, count }) => {
 });
 
 function renderBoardCard(cardNum, color) {
+  currentBoardCard = cardNum;
+  currentBoardType = cardType(cardNum);
   const front = makeCardFront(cardNum);
   front.classList.add('playing');
   boardCardInner.innerHTML = '';
@@ -330,10 +364,11 @@ function renderOppHand(playerIndex, count) {
 }
 
 function updateOppHandSize(playerIndex, delta) {
-  const countEl = document.getElementById(`opp-count-${playerIndex}`);
-  if (!countEl) return;
-  const cur = parseInt(countEl.textContent) || 0;
+  const handEl = document.getElementById(`opp-hand-${playerIndex}`);
+  if (!handEl) return;
+  const cur = parseInt(handEl.dataset.count || '8');
   const next = Math.max(0, cur + delta);
+  handEl.dataset.count = next;
   renderOppHand(playerIndex, next);
 }
 
